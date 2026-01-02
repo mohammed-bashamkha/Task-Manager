@@ -8,9 +8,11 @@ use App\Models\Profile;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\UploadFileTrait;
 
 class ProfileController extends Controller
 {
+    use UploadFileTrait;
     public function index() {
         $profile = Auth::user()->profile;
         return response()->json($profile, 200);
@@ -21,7 +23,8 @@ class ProfileController extends Controller
         $validateData['user_id'] = $user_id;
         $profile = Profile::create($validateData);
         if($request->hasFile('image')) {
-            $path = $request->file('image')->store('MyPhoto','public');
+            $path = $this->upload($request->file('image'),'profile','public');
+            // $path = $request->file('image')->store('MyPhoto','public');
             $validateData['image'] = $path;
         }
         return response()->json([
