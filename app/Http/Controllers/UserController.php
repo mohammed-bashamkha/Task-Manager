@@ -7,11 +7,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
     public function register(Request $request) {
-        $user = $request->validate([
+        Log::info('Registering user with data: ', $request->only(['name', 'email']));
+        try
+        {
+            $user = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email',
             'password' => 'required|string|confirmed'
@@ -22,13 +26,27 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
         return response()->json([
+            Log::info('User registered successfully: ', ['user_id' => $user->id]),
             'message' => 'User Registered Succssfully.',
-            'User' => $user
+            'User' => $user->only(['name','email'])
         ], 201);
+    }
+    catch (\Exception $e)
+    {
+        Log::error('Error registering user: ',['error' => $e->getMessage(),
+            'data' => $request->only(['name', 'email'])
+        ]);
+        return response()->json([
+            'message' => 'Registration Failed.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
     }
 
     public function login(Request $request) {
-        $user = $request->validate([
+        try
+        {
+            $user = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string'
         ]);
@@ -47,9 +65,21 @@ class UserController extends Controller
                 'message' => 'invalid user or password',
             ], 401);
         }
+        }
+        catch (\Exception $e)
+        {
+            Log::error('Error during user login: ',['error' => $e->getMessage(),
+                'data' => $request->only(['email'])
+            ]);
+            return response()->json([
+                'message' => 'Login Failed.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
     public function logout(Request $request) {
         $request->user()->tokens()->delete();
+        Log::info('User logged out successfully: ', ['user_id' => $request->user()->id,'user_info' => $request->user()->only(['name','email'])]);
         return response()->json(['message' => 'User LogOut Succssfully.']);
     }
 
