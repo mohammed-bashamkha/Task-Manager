@@ -14,8 +14,18 @@ use Mockery\Expectation;
 class TaskController extends Controller
 {
     public function index() {
-        $task = Auth::user()->tasks;
-        return response()->json($task, 200);
+        try
+        {
+            $task = Auth::user()->tasks;
+            return response()->json($task, 200);
+        }
+        catch (Exception $e)
+        {
+            return response()->json([
+                'message' => 'Error fetching tasks',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
     public function store(StoreTaskRequest $request) {
         $user_id = Auth::user()->id;

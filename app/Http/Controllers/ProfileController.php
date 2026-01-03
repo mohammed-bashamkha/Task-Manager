@@ -29,12 +29,12 @@ class ProfileController extends Controller
         }
         return response()->json([
             'message' => 'Profile Created Successfully',
-            'profile' => $profile
+            'profile' => first_letter_uppercase_in_word($profile)
         ], 201);
     }
     public function show($id) {
         $profile = Profile::where('user_id',$id)->firstOrFail();
-        return response()->json($profile, 200,);
+        return response()->json(first_letter_uppercase_in_word($profile), 200,);
     }
 
     public function update(UpdateProfileRequest $request,$id) {
