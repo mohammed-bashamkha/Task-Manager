@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserRegistered;
 use App\Http\Resources\UserResource;
 use App\Mail\WelcomeMail;
 use App\Models\User;
@@ -19,7 +20,7 @@ class UserController extends Controller
         {
             $user = $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|confirmed'
         ]);
         $user = User::create([
@@ -27,9 +28,10 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-        Mail::to($user->email)->send(new WelcomeMail($user));
+        UserRegistered::dispatch($user);
+        // Mail::to($user->email)->send(new WelcomeMail($user));
+        Log::info('User registered successfully: ', ['user_id' => $user->id]);
         return response()->json([
-            Log::info('User registered successfully: ', ['user_id' => $user->id]),
             'message' => 'User Registered Succssfully.',
             'User' => $user->only(['name','email'])
         ], 201);
