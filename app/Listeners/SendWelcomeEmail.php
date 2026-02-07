@@ -6,6 +6,7 @@ use App\Events\UserRegistered;
 use App\Mail\WelcomeMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendWelcomeEmail
@@ -25,9 +26,10 @@ class SendWelcomeEmail
     {
         $user = $event->user;
 
-        if(empty($user->email)) 
+        if(empty($user->email))
         {return;}
 
         Mail::to($user->email)->send(new WelcomeMail($user));
+        Log::info('User registered successfully: ', ['user_id' => $user->id]);
     }
 }

@@ -29,8 +29,6 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
         UserRegistered::dispatch($user);
-        // Mail::to($user->email)->send(new WelcomeMail($user));
-        Log::info('User registered successfully: ', ['user_id' => $user->id]);
         return response()->json([
             'message' => 'User Registered Succssfully.',
             'User' => $user->only(['name','email'])
