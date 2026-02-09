@@ -6,11 +6,13 @@ use App\Events\UserRegistered;
 use App\Http\Resources\UserResource;
 use App\Mail\WelcomeMail;
 use App\Models\User;
+use App\Notifications\NewUserRegistered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -29,6 +31,10 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
         UserRegistered::dispatch($user);
+
+        $user_admin = User::where('role','admin')->get();
+        Notification::send($user_admin, new NewUserRegistered($user));
+
         return response()->json([
             'message' => 'User Registered Succssfully.',
             'User' => $user->only(['name','email'])
@@ -105,4 +111,15 @@ class UserController extends Controller
         $userData = User::with('profile')->get();
         return  UserResource::collection($userData);
      }
+
+     public function getNotifications() {
+        $notifications = Auth::user()->notifications()->get();
+        return response()->json($notifications, 200);
+     }
+
+        public function readNotify($id) {
+            $notification = Auth::user()->notifications()->findOrFail($id);
+            $notification->markAsRead();
+            return response()->json(['message' => 'Notification marked as read.'], 200);
+        }
 }
