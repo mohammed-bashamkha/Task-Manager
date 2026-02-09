@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users")->cascadeOnDelete();
             $table->string("title");                                                    // for delete tasks on delete user
-            $table->string("descryption")->nullable();
+            $table->text("descryption")->nullable();
             $table->enum("priority",['high','medium','low']);
             $table->timestamps();
         });
