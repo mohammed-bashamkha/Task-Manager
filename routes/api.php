@@ -56,6 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/task/{taskId}/favorite',[TaskController::class,'removeFromFavorite']);
 
     Route::get('/task/favorite',[TaskController::class,'getFavoriteTask']);
+
+    Route::get('/notifications',[UserController::class,'getNotifications'])->middleware('CheckUser');
+    Route::post('/notification/{id}/read',[UserController::class,'readNotify'])->middleware('CheckUser');
 });
 
 // users
