@@ -1,66 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Manager API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A robust and scalable Task Management System built with **Laravel 11** and **PHP 8.2**. This project provides a comprehensive API for managing tasks, categories, user profiles, and notifications, designed to be consumed by modern frontend applications (Vue, React, or mobile apps).
 
-## About Laravel
+## 🚀 Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **User Authentication**: Secure API authentication using **Laravel Sanctum**.
+- **Task Management**:
+    - Create, Read, Update, and Delete (CRUD) tasks.
+    - Prioritize tasks (High, Medium, Low).
+    - Mark tasks as favorites.
+    - Filter tasks by User or Category.
+- **Category System**: Organize tasks into categories for better workflow management.
+- **Profile Management**: Update user profiles and manage personal details.
+- **Notifications**: Real-time or persistent notifications for task updates and system events.
+- **Admin Features**: Endpoints to view all users and tasks (with middleware protection).
+- **Log Viewing**: Integrated `opcodesio/log-viewer` for monitoring system logs.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Technology Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Backend Framework**: [Laravel 11](https://laravel.com)
+- **Language**: PHP ^8.2
+- **Database**: MySQL / SQLite (configurable)
+- **Authentication**: Laravel Sanctum
+- **Frontend Tooling**: Vite, PostCSS, Tailwind CSS (configured for potential frontend integration)
+- **Development Tools**:
+    - [Laravel Sail](https://laravel.com/docs/sail) (Docker environment)
+    - [Laravel Telescope](https://laravel.com/docs/telescope) (Debug assistant)
+    - [Pest / PHPUnit](https://pestphp.com) (Testing)
 
-## Learning Laravel
+## 📋 Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Ensure you have the following installed on your local machine:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **PHP** >= 8.2
+- **Composer**
+- **Node.js** & **NPM**
+- **Database** (MySQL, MariaDB, or SQLite)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🔧 Installation
 
-## Laravel Sponsors
+1.  **Clone the Repository**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    ```bash
+    git clone https://github.com/mohammed-bashamkha/Task-Manager.git
+    cd Task-Manager
+    ```
 
-### Premium Partners
+2.  **Install PHP Dependencies**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+    ```bash
+    composer install
+    ```
 
-## Contributing
+3.  **Install Frontend Dependencies**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```bash
+    npm install
+    ```
 
-## Code of Conduct
+4.  **Environment Configuration**
+    Copy the example environment file and configure your database credentials:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```bash
+    cp .env.example .env
+    ```
 
-## Security Vulnerabilities
+    Update `.env` with your database details:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=task_manager
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-## License
+5.  **Generate Application Key**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    ```bash
+    php artisan key:generate
+    ```
+
+6.  **Run Migrations**
+    Set up the database tables:
+
+    ```bash
+    php artisan migrate
+    ```
+
+    _(Optional) Seed the database with dummy data:_
+
+    ```bash
+    php artisan db:seed
+    ```
+
+7.  **Start the Development Server**
+    ```bash
+    php artisan serve
+    ```
+    In a separate terminal, run the frontend builder (if applicable):
+    ```bash
+    npm run dev
+    ```
+
+The API will be available at `http://localhost:8000/api`.
+
+## 📖 API Documentation
+
+### Authentication
+
+- `POST /api/register` - Register a new user
+- `POST /api/login` - Login and receive a Sanctum token
+- `POST /api/logout` - Logout (requires token)
+
+### Tasks
+
+- `GET /api/tasks` - List all tasks for the logged-in user
+- `POST /api/tasks` - Create a new task
+- `GET /api/tasks/{id}` - Get task details
+- `PUT /api/tasks/{id}` - Update a task
+- `DELETE /api/tasks/{id}` - Delete a task
+- `GET /api/task/ordered` - Get tasks sorted by priority
+
+### Categories
+
+- `GET /api/category` - List categories
+- `POST /api/category` - Create a category
+- `GET /api/tasks/{taskId}/categories` - Attach a category to a task
+
+### Favorites
+
+- `POST /api/task/{taskId}/favorite` - Add task to favorites
+- `DELETE /api/task/{taskId}/favorite` - Remove task from favorites
+- `GET /api/task/favorite` - List favorite tasks
+
+## 🧪 Testing
+
+Run the test suite to ensure everything is working correctly:
+
+```bash
+php artisan test
+```
+
+## 📄 License
+
+This project is open-source and available under the [MIT log-viewer](https://opensource.org/licenses/MIT).
