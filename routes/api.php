@@ -59,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/notifications',[UserController::class,'getNotifications'])->middleware('CheckUser');
     Route::post('/notification/{id}/read',[UserController::class,'readNotify'])->middleware('CheckUser');
+
+    Route::post('/send-mails-message',[UserController::class,'sendMailToUsers'])->middleware('CheckUser');
 });
 
 // users

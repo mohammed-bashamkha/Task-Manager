@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\UserRegistered;
 use App\Http\Resources\UserResource;
+use App\Jobs\sendingMails;
+use App\Mail\SendMailToUsers;
 use App\Mail\WelcomeMail;
 use App\Models\User;
 use App\Notifications\NewUserRegistered;
@@ -121,5 +123,26 @@ class UserController extends Controller
             $notification = Auth::user()->notifications()->findOrFail($id);
             $notification->markAsRead();
             return response()->json(['message' => 'Notification marked as read.'], 200);
+        }
+
+        public function sendMailToUsers(Request $request) {
+            $request->validate([
+                'title' => 'required|string',
+                'body' => 'required|string'
+            ]);
+            $data = [
+                'title' => $request->title,
+                'body' => $request->body
+            ];
+            try
+            {
+                SendingMails::dispatch($data);
+                return response()->json(['message' => 'Emails are being sent to all users.'], 200);
+            }
+            catch (\Exception $e)
+            {
+                Log::error('Error dispatching email job: ', ['error' => $e->getMessage(), 'data' => $data]);
+                return response()->json(['message' => 'Failed to send emails.', 'error' => $e->getMessage()], 500);
+            }
         }
 }
