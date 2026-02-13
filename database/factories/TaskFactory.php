@@ -21,7 +21,8 @@ class TaskFactory extends Factory
             'user_id' => User::inRandomOrder()->first()->id,
             'title' => fake()->sentence(),
             'descryption' => fake()->paragraph(),
-            'priority' => fake()->randomElement(['high','medium','low'])
+            'priority' => fake()->randomElement(['high','medium','low']),
+            'status' => fake()->randomElement(['done','not_done'])
         ];
     }
 }

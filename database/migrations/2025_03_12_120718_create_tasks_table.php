@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("title");                                                    // for delete tasks on delete user
             $table->text("descryption")->nullable();
             $table->enum("priority",['high','medium','low']);
+            $table->enum("status",['done','not_done'])->default('not_done');
             $table->timestamps();
         });
     }
