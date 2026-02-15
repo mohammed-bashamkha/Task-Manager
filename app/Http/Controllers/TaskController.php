@@ -9,7 +9,6 @@ use App\Models\Task;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Mockery\Expectation;
 
 class TaskController extends Controller
 {
@@ -31,6 +30,7 @@ class TaskController extends Controller
         $user_id = Auth::user()->id;
         $validateData = $request->validated();
         $validateData['user_id'] = $user_id;
+        $validateData['assigned_to'] = $user_id;
         $task = Task::create($validateData);
         return response()->json($task, 201);
     }
@@ -49,7 +49,7 @@ class TaskController extends Controller
     public function show($id) {
         $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
-        if($task->user_id != $user_id) {
+        if($task->user_id != $user_id || $task->assigned_to != $user_id) {
             return response()->json([
                 'message' => "The Task With ID ($id) Not Found"
             ], 200);
@@ -80,7 +80,7 @@ class TaskController extends Controller
     public function getTaskForUser($id) {
         $user_id = Auth::user()->id;
         $task = Task::findOrFail($id); // to get tasks fot user
-        if($task->user_id != $user_id) {
+        if($task->user_id != $user_id || $task->assigned_to != $user_id) {
             return response()->json([
                 'message' => "The Task With ID ($id) Not Allowed To Visit"
             ], 200);
@@ -91,7 +91,7 @@ class TaskController extends Controller
      public function AddCategoriesToTasks(Request $request,$taskId) {
         $user_id = Auth::user()->id;
         $task = Task::findOrFail($taskId);
-        if($task->user_id != $user_id) {
+        if($task->user_id != $user_id || $task->assigned_to != $user_id) {
             return response()->json([
                 'message' => "The Task With ID ($taskId) Not Allowed To Added"
             ], 200);

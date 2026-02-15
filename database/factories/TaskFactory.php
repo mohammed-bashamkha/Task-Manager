@@ -19,10 +19,11 @@ class TaskFactory extends Factory
     {
         return [
             'user_id' => User::inRandomOrder()->first()->id,
+            'assigned_to' => User::inRandomOrder()->first()->id,
             'title' => fake()->sentence(),
             'descryption' => fake()->paragraph(),
             'priority' => fake()->randomElement(['high','medium','low']),
-            'status' => fake()->randomElement(['done','not_done'])
+            'status' => fake()->randomElement(['pending','in_progress','completed']),
         ];
     }
 }

@@ -25,7 +25,9 @@ class UpdateTaskRequest extends FormRequest
             'title' => 'sometimes|string|between:5,20',
             'descryption' => 'sometimes|string',
             'priority' => "sometimes|integer|between:1,10",
-            'user_id' => "sometimes|exists:users,id"
+            'user_id' => "sometimes|exists:users,id",
+            'assigned_to' => "sometimes|exists:users,id",
+            'status' => "sometimes|in:panding,in_progress,completed",
         ];
     }
 }
