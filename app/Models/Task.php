@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','descryption','priority','user_id'];
+    protected $fillable = ['title','descryption','priority','user_id', 'status', 'assigned_to'];
 
 
     public function user() { // this function for relation between user and Tasks
@@ -20,5 +20,10 @@ class Task extends Model
 
     public function favoriteByUser() {
         return $this->belongsToMany(User::class,'favorites_');
+    }
+
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 }

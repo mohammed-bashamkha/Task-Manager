@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_active'
     ];
 
     /**
@@ -55,5 +56,10 @@ class User extends Authenticatable
 
     public function favoriteTask() {
         return $this->belongsToMany(Task::class,'favorites_');
+    }
+
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
     }
 }
