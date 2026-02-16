@@ -6,96 +6,65 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Category;
 use App\Models\Task;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class TaskController extends Controller
 {
-    public function index() {
-        try
-        {
-            $task = Auth::user()->tasks;
-            return response()->json($task, 200);
-        }
-        catch (Exception $e)
-        {
-            return response()->json([
-                'message' => 'Error fetching tasks',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+    use AuthorizesRequests;
+    public function index()
+    {
+        $this->authorize('viewAny', Task::class);
+        $tasks = Task::with('categories')->paginate(10);
+
+        return response()->json($tasks, 200);
     }
     public function store(StoreTaskRequest $request) {
-        $user_id = Auth::user()->id;
+        $this->authorize('create', Task::class);
+        $user = Auth::user();
+        $user_id = $user->id;
+
         $validateData = $request->validated();
         $validateData['user_id'] = $user_id;
         $validateData['assigned_to'] = $user_id;
         $task = Task::create($validateData);
+        
         return response()->json($task, 201);
     }
 
     public function update(UpdateTaskRequest $request, $id) {
-        $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
-        if($task->user_id != $user_id)
-        {
-            return response()->json(['message'=>"There is no Task  For Id : {$task->id}"], 200);
-        }
+        $this->authorize('update', $task);
         $task->update($request->validated());
+
         return response()->json($task, 200);
     }
 
     public function show($id) {
-        $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
-        if($task->user_id != $user_id || $task->assigned_to != $user_id) {
-            return response()->json([
-                'message' => "The Task With ID ($id) Not Found"
-            ], 200);
-        }
+        
+        $this->authorize('view', $task);
         return response()->json($task, 200);
     }
 
     public function destroy($id) {
-        try {
-            $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
-        if($task->user_id != $user_id) {
-            return response()->json([
-                'message' => "The Task With ID ($id) Not Allowed To Deleted"
-            ], 200);
-        }
+        $this->authorize('delete', $task);
         $task->delete();
         return response()->json("Task With ID ($id) Deleted Seccssfuly", 200);
-        }
-        catch( Exception $exception) {
-            return response()->json([
-                'message' => 'Task was Deleted or Not Found',
-                'more' => "<-$exception->"
-            ], 404);
-        }
     }
     ////
     public function getTaskForUser($id) {
-        $user_id = Auth::user()->id;
         $task = Task::findOrFail($id); // to get tasks fot user
-        if($task->user_id != $user_id || $task->assigned_to != $user_id) {
-            return response()->json([
-                'message' => "The Task With ID ($id) Not Allowed To Visit"
-            ], 200);
-        }
+        $this->authorize('view', $task);
         return response()->json($task, 200);
      }
 
      public function AddCategoriesToTasks(Request $request,$taskId) {
-        $user_id = Auth::user()->id;
         $task = Task::findOrFail($taskId);
-        if($task->user_id != $user_id || $task->assigned_to != $user_id) {
-            return response()->json([
-                'message' => "The Task With ID ($taskId) Not Allowed To Added"
-            ], 200);
-        }
+        $this->authorize('addTaskToCategory', $task);
         $task->categories()->attach($request->category_id);
         return response()->json('Category Attached successfully', 200,);
      }

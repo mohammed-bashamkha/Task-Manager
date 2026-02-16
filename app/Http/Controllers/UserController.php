@@ -32,9 +32,10 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+        $user->assignRole('user');
         UserRegistered::dispatch($user);
 
-        $user_admin = User::where('role','admin')->get();
+        $user_admin = $user->hasRole('admin');
         Notification::send($user_admin, new NewUserRegistered($user));
 
         return response()->json([

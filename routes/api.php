@@ -12,7 +12,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('/tasks',TaskController::class); // All-in-one
 
-    Route::get('/task/all',[TaskController::class,'getAllTasks'])->middleware('CheckUser'); // Read
+    Route::get('/task/all',[TaskController::class,'getAllTasks']);
 
     Route::get('/task/ordered',[TaskController::class,'getTaskBypriority']);
 
@@ -37,14 +37,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/get',[UserController::class,'GetUser']);
 
-    Route::get('/user/all',[UserController::class,'GetAllUser'])->middleware('CheckUser');
+    Route::get('/user/all',[UserController::class,'GetAllUser']);
 
     Route::get('task/{id}/user',[TaskController::class,'getTaskForUser']);
 
     Route::get('tasks/{task_id}/categories',[TaskController::class,'AddCategoriesToTasks']);
 
     // category Routes
-    Route::apiResource('/category',CategoryController::class)->middleware('auth:sanctum'); // All-in-one
+    Route::apiResource('/category',CategoryController::class);
 
     Route::get('/task/{taskId}/categories',[TaskController::class,'getTaskCategories']);
 
@@ -57,10 +57,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/task/favorite',[TaskController::class,'getFavoriteTask']);
 
-    Route::get('/notifications',[UserController::class,'getNotifications'])->middleware('CheckUser');
-    Route::post('/notification/{id}/read',[UserController::class,'readNotify'])->middleware('CheckUser');
+    Route::get('/notifications',[UserController::class,'getNotifications']);
+    Route::post('/notification/{id}/read',[UserController::class,'readNotify']);
 
-    Route::post('/send-mails-message',[UserController::class,'sendMailToUsers'])->middleware('CheckUser');
+    Route::post('/send-mails-message',[UserController::class,'sendMailToUsers']);
 });
 
 // users

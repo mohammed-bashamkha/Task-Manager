@@ -19,6 +19,7 @@ class RolePermissionSeeder extends Seeder
             'task.delete',
             'task.assign',
             'category.manage',
+            'category.add_task_to_category',
             'user.manage',
         ];
 
