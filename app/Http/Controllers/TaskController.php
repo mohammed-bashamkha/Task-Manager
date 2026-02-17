@@ -30,7 +30,7 @@ class TaskController extends Controller
         $validateData['user_id'] = $user_id;
         $validateData['assigned_to'] = $user_id;
         $task = Task::create($validateData);
-        
+
         return response()->json($task, 201);
     }
 
@@ -44,7 +44,7 @@ class TaskController extends Controller
 
     public function show($id) {
         $task = Task::findOrFail($id);
-        
+
         $this->authorize('view', $task);
         return response()->json($task, 200);
     }

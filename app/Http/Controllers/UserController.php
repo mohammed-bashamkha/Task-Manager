@@ -9,6 +9,7 @@ use App\Mail\SendMailToUsers;
 use App\Mail\WelcomeMail;
 use App\Models\User;
 use App\Notifications\NewUserRegistered;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
     public function register(Request $request) {
         Log::info('Registering user with data: ', $request->only(['name', 'email']));
         try
@@ -97,22 +99,27 @@ class UserController extends Controller
 
     public function getProfile($id) {
        $profile = User::find($id)->profile; // to get user profile by id
+       $this->authorize('view', $profile);
        return response()->json($profile, 200);
     }
 
     public function getUserTasks($id) {
         $tasks = User::findOrFail($id)->tasks; // to get user Tasks by id
+        $this->authorize('view', $tasks);
         return response()->json($tasks, 200);
      }
 
      public function GetUser() {
         $user_id = Auth::user()->id;
         $userData = User::with('profile')->findOrFail($user_id);
+        $this->authorize('view', $userData);
         return new UserResource($userData);
      }
      public function GetAllUser() {
-        $userData = User::with('profile')->get();
-        return  UserResource::collection($userData);
+        $userData = User::with('profile')->paginate(5);
+        $users = UserResource::collection($userData);
+        $this->authorize('viewAny', $users);
+        return  response()->json($users, 200);
      }
 
      public function getNotifications() {
